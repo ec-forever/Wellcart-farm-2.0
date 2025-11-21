@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WellCart</title>
 
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
   <!-- React + ReactDOM -->
   <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -17,34 +22,75 @@
 
   <style>
     html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
   </style>
 </head>
-
 <body class="bg-white text-gray-900">
   <div id="root"></div>
 
   <script type="text/babel">
     const App = () => {
       const scrollToInfo = () => {
-        document.getElementById('info').scrollIntoView({ behavior: 'smooth' });
+        const infoSection = document.getElementById('info');
+        if (infoSection) {
+          infoSection.scrollIntoView({ behavior: 'smooth' });
+        }
       };
 
       return (
-        <div className="font-sans">
-
+        <div className="flex flex-col min-h-screen">
           {/* HEADER */}
-          <header className="w-full flex justify-between items-center px-4 md:px-8 py-4 border-b">
-            <div className="text-xl md:text-2xl font-bold text-[#0F3D1C]">
-              WellCart
-            </div>
-
-            <button
-              className="px-4 py-2 bg-[#0F3D1C] text-white rounded-[10px] text-sm md:text-base hover:bg-opacity-90"
-            >
+          <header className="w-full flex items-center justify-between px-4 md:px-10 py-4 border-b border-gray-100 bg-white/80 backdrop-blur">
+            <div className="text-xl md:text-2xl font-bold text-[#0F3D1C] tracking-tight">WellCart</div>
+            <button className="px-4 md:px-5 py-2 bg-[#0F3D1C] text-white rounded-[10px] text-sm md:text-base font-semibold shadow-sm hover:bg-[#0b2f15] transition-colors">
               Check Eligibility
             </button>
           </header>
 
-          {/* HERO */}
-          <section className="text-center py-20 md:py-28 px-4">
-            <h1 className="text-4xl md
+          {/* HERO SECTION */}
+          <section className="flex flex-col items-center text-center px-4 md:px-10 lg:px-16 py-16 md:py-24 gap-6">
+            <div className="max-w-3xl space-y-6">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">WellCart</h1>
+              <p className="text-lg md:text-xl text-gray-600 leading-relaxed">
+                Connecting healthcare with local farms.
+              </p>
+              <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 pt-2">
+                <button className="px-6 py-3 bg-[#0F3D1C] text-white rounded-[10px] text-base md:text-lg font-semibold shadow hover:bg-[#0b2f15] transition-colors">
+                  Check Eligibility
+                </button>
+                <button
+                  onClick={scrollToInfo}
+                  className="px-6 py-3 bg-white text-[#0F3D1C] border border-[#0F3D1C] rounded-[10px] text-base md:text-lg font-semibold hover:bg-[#f3f7f4] transition-colors"
+                >
+                  Learn More
+                </button>
+              </div>
+            </div>
+          </section>
+
+          {/* INFO SECTION */}
+          <section id="info" className="px-4 md:px-10 lg:px-16 pb-16 md:pb-24">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+              <div className="w-full h-64 sm:h-72 lg:h-80 bg-gray-100 rounded-2xl border border-gray-200 flex items-center justify-center text-gray-400 text-lg font-semibold">
+                Image Placeholder
+              </div>
+              <div className="space-y-6">
+                <p className="text-base md:text-lg text-gray-700 leading-relaxed">
+                  We use the power of AI combined with our clinical support tools to allow healthcare providers, nutritionists, and trainers to issue food as medicine to patients and clients through local farms. Supporting local agriculture and empowering communities to be healthier by eating local.
+                </p>
+                <button className="px-6 py-3 bg-[#0F3D1C] text-white rounded-[10px] text-base md:text-lg font-semibold shadow hover:bg-[#0b2f15] transition-colors w-fit">
+                  Get Started
+                </button>
+              </div>
+            </div>
+          </section>
+        </div>
+      );
+    };
+
+    const rootElement = document.getElementById('root');
+    const root = ReactDOM.createRoot(rootElement);
+    root.render(<App />);
+  </script>
+</body>
+</html>
