@@ -1,10 +1,9 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-
-import retailerRouter from "./routes/retailer.js";
-import uploadRouter from "./routes/upload.js";
-import skuRouter from "./routes/sku.js";
+const express = require("express");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const retailerRouter = require("./routes/retailer");
+const uploadRouter = require("./routes/upload");
+const skuRouter = require("./routes/sku");
 
 dotenv.config();
 
@@ -29,10 +28,6 @@ app.use((err, req, res, next) => {
 // Start server normally
 const PORT = process.env.PORT || 3000;
 
-if (process.argv[1] === new URL(import.meta.url).pathname) {
-  app.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}`);
-  });
-}
-
-export default app;
+app.listen(PORT, () => {
+  console.log(`Server running on ${PORT}`);
+});
