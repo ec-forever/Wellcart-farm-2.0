@@ -10,11 +10,13 @@ dotenv.config();
 
 const app = express();
 const frontendDir = path.join(__dirname, "..", "frontend");
+const publicDir = path.join(__dirname, "..", "public");
 
 // Middleware
 app.use(cors());
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(publicDir));
 app.use(express.static(frontendDir));
 
 // API routes
