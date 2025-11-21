@@ -17,6 +17,14 @@
   <!-- Babel for JSX -->
   <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
 
+  <script type="importmap">
+    {
+      "imports": {
+        "@": "./"
+      }
+    }
+  </script>
+
   <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
 
@@ -28,7 +36,9 @@
   <body class="bg-white text-gray-900">
     <div id="root"></div>
 
-  <script type="text/babel">
+  <script type="text/babel" data-type="module" data-presets="env,react">
+    import { hero, logo, farm } from "@/assets/assetPaths.js";
+
     const App = () => {
       const scrollToInfo = () => {
         const infoSection = document.getElementById('info');
@@ -40,8 +50,8 @@
       return (
         <div className="flex flex-col min-h-screen">
           {/* HEADER */}
-          <header className="w-full flex items-center justify-between px-4 md:px-10 py-4 border-b border-gray-100 bg-white/80 backdrop-blur">
-            <img src="./assets/logo.png" alt="WellCart Logo" className="h-8 w-auto" />
+          <header className="w-full flex items-center justify-between px-4 md:px-10 py-4 border-b border-gray-100 bg-white/80 backdrop-blur relative z-20">
+            <img src={logo} alt="WellCart Logo" className="h-8 w-auto" />
             <button className="px-4 md:px-5 py-2 bg-[#0F3D1C] text-white rounded-[10px] text-sm md:text-base font-semibold shadow-sm hover:bg-[#0b2f15] transition-colors">
               Check Eligibility
             </button>
@@ -50,15 +60,15 @@
           {/* HERO SECTION */}
           <section className="relative w-full min-h-screen">
             <img
-              src="./assets/hero.jpg"
+              src={hero}
               alt="Healthy produce and farms"
               className="absolute inset-0 w-full h-full object-cover object-center"
             />
-            <div className="absolute inset-0 bg-black/30" aria-hidden="true"></div>
-            <div className="relative flex flex-col items-center justify-center text-center min-h-screen px-4 md:px-10 lg:px-16 py-16 md:py-24 gap-6 text-white">
+            <div className="absolute inset-0 bg-black/50" aria-hidden="true"></div>
+            <div className="relative z-10 flex flex-col items-center justify-center text-center min-h-screen px-4 md:px-10 lg:px-16 py-16 md:py-24 gap-6 text-white">
               <div className="max-w-3xl space-y-6">
                 <div className="flex justify-center">
-                  <img src="./assets/logo.png" alt="WellCart Logo" className="h-10 w-auto" />
+                  <img src={logo} alt="WellCart Logo" className="h-10 w-auto" />
                 </div>
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">Connecting healthcare with local farms.</h1>
                 <p className="text-lg md:text-xl text-white/90 leading-relaxed">
@@ -84,7 +94,7 @@
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
               <div className="w-full h-64 sm:h-72 lg:h-80 rounded-2xl border border-gray-200 overflow-hidden">
                 <img
-                  src="./assets/farm.jpg"
+                  src={farm}
                   alt="Local farm landscape"
                   className="w-full h-full object-cover object-center"
                 />
@@ -102,7 +112,7 @@
 
           {/* FOOTER */}
           <footer className="w-full border-t border-gray-200 py-6 px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <img src="./assets/logo.png" alt="WellCart Logo" className="h-8 w-auto" />
+            <img src={logo} alt="WellCart Logo" className="h-8 w-auto" />
             <span className="text-sm text-gray-500">Made in NY</span>
           </footer>
         </div>
