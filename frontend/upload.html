@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload Assets</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.13/dist/tailwind.min.css"
+    />
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  </head>
+  <body class="bg-gray-50">
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const { useState } = React;
+
+      const SectionCard = ({ title, description, children }) => (
+        <section className="rounded-2xl bg-white p-6 shadow-md ring-1 ring-gray-100">
+          <div className="mb-4 space-y-1">
+            <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
+            <p className="text-sm text-gray-600">{description}</p>
+          </div>
+          {children}
+        </section>
+      );
+
+      const useRetailerId = () => {
+        const params = new URLSearchParams(window.location.search);
+        return params.get("retailer_id");
+      };
+
+      const PhotoUpload = () => {
+        const retailerId = useRetailerId();
+        const [file, setFile] = useState(null);
+        const [status, setStatus] = useState(null);
+
+        const handleSubmit = async (e) => {
+          e.preventDefault();
+          if (!file) return setStatus("Please choose a photo.");
+          setStatus("Uploading...");
+          try {
+            const body = new FormData();
+            body.append("photo", file);
+            if (retailerId) body.append("retailer_id", retailerId);
+            const response = await fetch("/api/upload/photo", {
+              method: "POST",
+              body,
+            });
+            if (!response.ok) throw new Error("Upload failed");
+            setStatus("Photo uploaded successfully.");
+          } catch (err) {
+            console.error(err);
+            setStatus("Upload failed. Please retry.");
+          }
+        };
+
+        return (
+          <SectionCard
+            title="Photo upload"
+            description="Send product or farm imagery to accompany your catalog."
+          >
+            <form className="space-y-3" onSubmit={handleSubmit}>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setFile(e.target.files[0])}
+                className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 shadow-sm focus:border-lime-400 focus:outline-none focus:ring-2 focus:ring-lime-200"
+              />
+              <button
+                type="submit"
+                className="inline-flex items-center rounded-lg bg-lime-400 px-4 py-2 font-semibold text-gray-900 shadow-sm transition hover:bg-lime-300"
+              >
+                Upload photo
+              </button>
+              {status && <p className="text-sm text-gray-600">{status}</p>}
+            </form>
+          </SectionCard>
+        );
+      };
+
+      const CsvUpload = () => {
+        const retailerId = useRetailerId();
+        const [file, setFile] = useState(null);
+        const [status, setStatus] = useState(null);
+
+        const handleSubmit = async (e) => {
+          e.preventDefault();
+          if (!file) return setStatus("Please select a CSV file.");
+          setStatus("Uploading...");
+          try {
+            const body = new FormData();
+            body.append("csv", file);
+            if (retailerId) body.append("retailer_id", retailerId);
+            const response = await fetch("/api/upload/csv", {
+              method: "POST",
+              body,
+            });
+            if (!response.ok) throw new Error("Upload failed");
+            setStatus("CSV uploaded successfully.");
+          } catch (err) {
+            console.error(err);
+            setStatus("Upload failed. Please retry.");
+          }
+        };
+
+        return (
+          <SectionCard
+            title="CSV upload"
+            description="Bulk import SKUs and pricing by sending a spreadsheet."
+          >
+            <form className="space-y-3" onSubmit={handleSubmit}>
+              <input
+                type="file"
+                accept=".csv,text/csv"
+                onChange={(e) => setFile(e.target.files[0])}
+                className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 shadow-sm focus:border-lime-400 focus:outline-none focus:ring-2 focus:ring-lime-200"
+              />
+              <button
+                type="submit"
+                className="inline-flex items-center rounded-lg bg-lime-400 px-4 py-2 font-semibold text-gray-900 shadow-sm transition hover:bg-lime-300"
+              >
+                Upload CSV
+              </button>
+              {status && <p className="text-sm text-gray-600">{status}</p>}
+            </form>
+          </SectionCard>
+        );
+      };
+
+      const ManualSku = () => {
+        const retailerId = useRetailerId();
+        const [sku, setSku] = useState("");
+        const [status, setStatus] = useState(null);
+
+        const handleSubmit = async (e) => {
+          e.preventDefault();
+          if (!sku.trim()) return setStatus("Enter at least one SKU.");
+          setStatus("Submitting...");
+          try {
+            const payload = { sku, retailer_id: retailerId };
+            const response = await fetch("/api/sku/manual", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+            if (!response.ok) throw new Error("Submission failed");
+            setStatus("SKU submitted successfully.");
+            setSku("");
+          } catch (err) {
+            console.error(err);
+            setStatus("Submission failed. Please retry.");
+          }
+        };
+
+        return (
+          <SectionCard
+            title="Manual SKU entry"
+            description="Quickly paste or type SKUs to add items without a file."
+          >
+            <form className="space-y-3" onSubmit={handleSubmit}>
+              <textarea
+                value={sku}
+                onChange={(e) => setSku(e.target.value)}
+                rows="4"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 shadow-sm focus:border-lime-400 focus:outline-none focus:ring-2 focus:ring-lime-200"
+                placeholder="Enter one SKU per line"
+              ></textarea>
+              <button
+                type="submit"
+                className="inline-flex items-center rounded-lg bg-lime-400 px-4 py-2 font-semibold text-gray-900 shadow-sm transition hover:bg-lime-300"
+              >
+                Submit SKUs
+              </button>
+              {status && <p className="text-sm text-gray-600">{status}</p>}
+            </form>
+          </SectionCard>
+        );
+      };
+
+      const UploadPage = () => (
+        <div className="min-h-screen bg-gradient-to-br from-lime-50 via-white to-green-50 px-4 py-10">
+          <div className="mx-auto max-w-4xl space-y-8">
+            <header className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="text-sm uppercase tracking-wide text-lime-600">Uploads</p>
+                <h1 className="text-3xl font-bold text-gray-900">Add catalog assets</h1>
+                <p className="text-gray-600">
+                  Deliver photos, CSV data, or manual SKUs to complete your onboarding.
+                </p>
+              </div>
+              <a
+                href="/onboard.html"
+                className="inline-flex items-center rounded-lg bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow ring-1 ring-gray-200 transition hover:bg-gray-50"
+              >
+                Back to intake
+              </a>
+            </header>
+
+            <div className="grid gap-6 lg:grid-cols-2">
+              <PhotoUpload />
+              <CsvUpload />
+              <div className="lg:col-span-2">
+                <ManualSku />
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<UploadPage />);
+    </script>
+  </body>
+</html>
