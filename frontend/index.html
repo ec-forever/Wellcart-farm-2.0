@@ -36,18 +36,8 @@
   <body class="bg-white text-gray-900">
     <div id="root"></div>
 
-  <script type="module">
+  <script type="text/babel" data-type="module" data-presets="env,react">
     import { hero, logo, farm } from "@/assets/assetPaths.js";
-
-    window.wellcartAssets = {
-      hero,
-      logo,
-      farm,
-    };
-  </script>
-
-  <script type="text/babel">
-    const { hero, logo, farm } = window.wellcartAssets || {};
 
     const App = () => {
       const scrollToInfo = () => {
